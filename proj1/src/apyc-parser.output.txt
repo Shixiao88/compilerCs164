@@ -1,0 +1,205 @@
+Terminals unused in grammar
+
+   ID
+   INDENT
+   DEDENT
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: stmt_list
+
+    2 stmt_list: print_stmt NEWLINE
+    3          | stmt_list print_stmt NEWLINE
+
+    4 print_stmt: "print" expression_list
+
+    5 expression_list: expression_list1
+    6                | %empty
+
+    7 expression_list1: expression
+    8                 | expression_list1 ',' expression
+
+    9 expression: INT
+   10           | string_literal
+
+   11 string_literal: STRING
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+',' (44) 8
+error (256)
+ID (258)
+STRING (259) 11
+INT (260) 9
+NEWLINE (261) 2 3
+INDENT (262)
+DEDENT (263)
+"print" (264) 4
+
+
+Nonterminals, with rules where they appear
+
+$accept (11)
+    on left: 0
+program (12)
+    on left: 1, on right: 0
+stmt_list (13)
+    on left: 2 3, on right: 1 3
+print_stmt (14)
+    on left: 4, on right: 2 3
+expression_list (15)
+    on left: 5 6, on right: 4
+expression_list1 (16)
+    on left: 7 8, on right: 5 8
+expression (17)
+    on left: 9 10, on right: 7 8
+string_literal (18)
+    on left: 11, on right: 10
+
+
+State 0
+
+    0 $accept: . program $end
+
+    "print"  shift, and go to state 1
+
+    program     go to state 2
+    stmt_list   go to state 3
+    print_stmt  go to state 4
+
+
+State 1
+
+    4 print_stmt: "print" . expression_list
+
+    STRING  shift, and go to state 5
+    INT     shift, and go to state 6
+
+    $default  reduce using rule 6 (expression_list)
+
+    expression_list   go to state 7
+    expression_list1  go to state 8
+    expression        go to state 9
+    string_literal    go to state 10
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 11
+
+
+State 3
+
+    1 program: stmt_list .
+    3 stmt_list: stmt_list . print_stmt NEWLINE
+
+    "print"  shift, and go to state 1
+
+    $default  reduce using rule 1 (program)
+
+    print_stmt  go to state 12
+
+
+State 4
+
+    2 stmt_list: print_stmt . NEWLINE
+
+    NEWLINE  shift, and go to state 13
+
+
+State 5
+
+   11 string_literal: STRING .
+
+    $default  reduce using rule 11 (string_literal)
+
+
+State 6
+
+    9 expression: INT .
+
+    $default  reduce using rule 9 (expression)
+
+
+State 7
+
+    4 print_stmt: "print" expression_list .
+
+    $default  reduce using rule 4 (print_stmt)
+
+
+State 8
+
+    5 expression_list: expression_list1 .
+    8 expression_list1: expression_list1 . ',' expression
+
+    ','  shift, and go to state 14
+
+    $default  reduce using rule 5 (expression_list)
+
+
+State 9
+
+    7 expression_list1: expression .
+
+    $default  reduce using rule 7 (expression_list1)
+
+
+State 10
+
+   10 expression: string_literal .
+
+    $default  reduce using rule 10 (expression)
+
+
+State 11
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 12
+
+    3 stmt_list: stmt_list print_stmt . NEWLINE
+
+    NEWLINE  shift, and go to state 15
+
+
+State 13
+
+    2 stmt_list: print_stmt NEWLINE .
+
+    $default  reduce using rule 2 (stmt_list)
+
+
+State 14
+
+    8 expression_list1: expression_list1 ',' . expression
+
+    STRING  shift, and go to state 5
+    INT     shift, and go to state 6
+
+    expression      go to state 16
+    string_literal  go to state 10
+
+
+State 15
+
+    3 stmt_list: stmt_list print_stmt NEWLINE .
+
+    $default  reduce using rule 3 (stmt_list)
+
+
+State 16
+
+    8 expression_list1: expression_list1 ',' expression .
+
+    $default  reduce using rule 8 (expression_list1)
